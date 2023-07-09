@@ -3,11 +3,14 @@ package com.example.projectandroid;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -24,6 +27,15 @@ public class SiginAdmin extends AppCompatActivity {
     private String usernameh;
     private Button signin;
     private String pass, mail;
+    public static final String NAME = "NAME1";
+    public static final String PASS = "PASS1";
+    public static final String FLAG = "FLAG1";
+    private boolean flag = false;
+    private CheckBox chk;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +44,42 @@ public class SiginAdmin extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_sigin_admin);
         setup();
+        setupSharedPrefs();
+        checkPrefs();
+    }
+
+    private void checkPrefs() {
+        flag = prefs.getBoolean(FLAG, false);
+
+        if(flag){
+            String name = prefs.getString(NAME, "");
+            String password = prefs.getString(PASS, "");
+            Email.setText(name);
+            Password.setText(password);
+            chk.setChecked(true);
+        }
+    }
+
+    private void setupSharedPrefs() {
+        prefs= PreferenceManager.getDefaultSharedPreferences(this);
+        editor = prefs.edit();
+    }
+
+    public void btnLoginOnClick(View view) {
+        String name = Email.getText().toString();
+        String password = Password.getText().toString();
+
+        if(chk.isChecked()){
+            if(!flag) {
+                editor.putString(NAME, name);
+                editor.putString(PASS, password);
+                editor.putBoolean(FLAG, true);
+                editor.commit();
+            }
+
+        }
+        // authenticate the user
+
     }
 
     public void SingUpAdmin(View view) {
@@ -49,6 +97,7 @@ public class SiginAdmin extends AppCompatActivity {
         Password = findViewById(R.id.passwordadmin);
         Email = findViewById(R.id.adminemail);
         signin = findViewById(R.id.signinadmin);
+        chk = findViewById(R.id.chk2);
     }
 
     public void loginuser(View view) {

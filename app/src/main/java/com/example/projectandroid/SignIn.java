@@ -3,11 +3,14 @@ package com.example.projectandroid;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -29,6 +32,15 @@ public class SignIn extends AppCompatActivity {
     private Intent intent;
     private String usernameh;
 
+    public static final String NAME = "NAME";
+    public static final String PASS = "PASS";
+    public static final String FLAG = "FLAG";
+    private boolean flag = false;
+
+    private CheckBox chk;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +48,42 @@ public class SignIn extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.signin);
         setup();
+        setupSharedPrefs();
+        checkPrefs();
+    }
+
+    private void checkPrefs() {
+        flag = prefs.getBoolean(FLAG, false);
+
+        if(flag){
+            String name = prefs.getString(NAME, "");
+            String password = prefs.getString(PASS, "");
+            Email.setText(name);
+            Password.setText(password);
+            chk.setChecked(true);
+        }
+    }
+
+    private void setupSharedPrefs() {
+        prefs= PreferenceManager.getDefaultSharedPreferences(this);
+        editor = prefs.edit();
+    }
+
+    public void btnLoginOnClick(View view) {
+        String name = Email.getText().toString();
+        String password = Password.getText().toString();
+
+        if(chk.isChecked()){
+            if(!flag) {
+                editor.putString(NAME, name);
+                editor.putString(PASS, password);
+                editor.putBoolean(FLAG, true);
+                editor.commit();
+            }
+
+        }
+        // authenticate the user
+
     }
 
     public void SingInAdmin(View view) {
@@ -47,6 +95,7 @@ public class SignIn extends AppCompatActivity {
         Password = findViewById(R.id.passwordsignin);
         Email = findViewById(R.id.Emailsginin);
         signin = findViewById(R.id.signin);
+        chk = findViewById(R.id.chk);
     }
 
     public void CheackUser(View view) {
