@@ -67,6 +67,10 @@ public class ViewReservationPage extends AppCompatActivity {
                 return true;
             case R.id.Delete:
                 Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show();
+                Intent intent7 = new Intent(ViewReservationPage.this, delete.class);
+                intent7.putExtra("username", getIntent().getStringExtra("username"));
+                startActivity(intent7);
+
                 return true;
             case R.id.addroom:
                 Toast.makeText(this, "Add Room", Toast.LENGTH_SHORT).show();
@@ -92,6 +96,18 @@ public class ViewReservationPage extends AppCompatActivity {
                 intent4.putExtra("username", getIntent().getStringExtra("username"));
                 startActivity(intent4);
                 return true;
+
+            case R.id.greport:
+                Toast.makeText(this, "Generate Report", Toast.LENGTH_SHORT).show();
+                Intent intent5 = new Intent(ViewReservationPage.this, Report.class);
+                intent5.putExtra("username", getIntent().getStringExtra("username"));
+                startActivity(intent5);
+                return true;
+            case R.id.Vreports:
+                Toast.makeText(this, "View Reports", Toast.LENGTH_SHORT).show();
+                Intent intent6 = new Intent(ViewReservationPage.this, ViewReports.class);
+                intent6.putExtra("username", getIntent().getStringExtra("username"));
+                startActivity(intent6);
             case R.id.logout1:
                 logout();
                 Toast.makeText(this, "logout", Toast.LENGTH_SHORT).show();
@@ -101,33 +117,47 @@ public class ViewReservationPage extends AppCompatActivity {
         }
     }
 
-    private void logout() {
-        // Make a GET request to the logout URL
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, LOGOUT_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(ViewReservationPage.this, "Logout successful", Toast.LENGTH_SHORT).show();
-                        // Navigate to the login page
-                        Intent intent = new Intent(ViewReservationPage.this, SiginAdmin.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finishAffinity();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle errors
-                        Toast.makeText(ViewReservationPage.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e("Logout Error", error.getMessage());
-                    }
-                });
+    private class LogoutTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+            String logoutUrl = "http://10.0.2.2:80/android/logout.php";
 
-        // Get the RequestQueue and add the request to it
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+            try {
+                // Make a GET request to the logout URL
+                RequestQueue requestQueue = Volley.newRequestQueue(ViewReservationPage.this);
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, logoutUrl,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Toast.makeText(ViewReservationPage.this, "Logout successful", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(ViewReservationPage.this, SiginAdmin.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finishAffinity();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // Handle errors
+                                Log.e("Logout Error", error.getMessage());
+                            }
+                        });
+
+                // Get the RequestQueue and add the request to it
+                requestQueue.add(stringRequest);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
+    private void logout() {
+        LogoutTask logoutTask = new LogoutTask();
+        logoutTask.execute();
+    }
+
 
     private void fetchReservationsFromServer() {
         String url = "http://10.0.2.2:80/android/getresvervation.php";

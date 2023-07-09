@@ -200,6 +200,9 @@ public class ViewRooms extends AppCompatActivity {
 
             case R.id.search:
                 Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show();
+                Intent intent3 = new Intent(this, search.class);
+                intent3.putExtra("username", username);
+                startActivity(intent3);
                 return true;
 
             case R.id.Vroom:
@@ -227,30 +230,45 @@ public class ViewRooms extends AppCompatActivity {
         }
     }
 
-    public void logoutdd() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGOUT_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Handle the response from the server
-                        Toast.makeText(ViewRooms.this, "Logged out successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(ViewRooms.this, SignIn.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finishAffinity();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle errors
-                        Toast.makeText(ViewRooms.this, "Error logging out: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e("Logout Error", error.getMessage());
-                    }
-                }) {
-        };
+    private class LogoutTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+            String logoutUrl = "http://10.0.2.2:80/android/logout.php";
 
-        RequestQueue requestQueue = Volley.newRequestQueue(ViewRooms.this);
-        requestQueue.add(stringRequest);
+            try {
+                // Make a GET request to the logout URL
+                RequestQueue requestQueue = Volley.newRequestQueue(ViewRooms.this);
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, logoutUrl,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Toast.makeText(ViewRooms.this, "Logout successful", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(ViewRooms.this, SignIn.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finishAffinity();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // Handle errors
+                                Log.e("Logout Error", error.getMessage());
+                            }
+                        });
+
+                // Get the RequestQueue and add the request to it
+                requestQueue.add(stringRequest);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
+    private void logoutdd() {
+        LogoutTask logoutTask = new LogoutTask();
+        logoutTask.execute();
+    }
+
 }

@@ -78,6 +78,9 @@ public class CardViewMenue extends AppCompatActivity implements CardMainAdapter.
             Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
         }else if (position == 1){
             Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show();
+            Intent intent2 = new Intent(this, search.class);
+            intent2.putExtra("username", username);
+            startActivity(intent2);
         }else if (position == 2){
             Toast.makeText(this, "View Rooms", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, ViewRooms.class);
@@ -85,7 +88,6 @@ public class CardViewMenue extends AppCompatActivity implements CardMainAdapter.
             startActivity(intent);
         }else if (position == 3){
             Toast.makeText(this, "View Food", Toast.LENGTH_SHORT).show();
-
             Intent intent1 = new Intent(this, ViewFoodActivity.class);
             intent1.putExtra("username", username);
             startActivity(intent1);

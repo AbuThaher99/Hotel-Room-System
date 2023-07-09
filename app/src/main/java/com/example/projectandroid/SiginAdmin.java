@@ -27,9 +27,9 @@ public class SiginAdmin extends AppCompatActivity {
     private String usernameh;
     private Button signin;
     private String pass, mail;
-    public static final String NAME = "NAME1";
-    public static final String PASS = "PASS1";
-    public static final String FLAG = "FLAG1";
+    public static final String NAME = "NAMEAdmin";
+    public static final String PASS = "PASSAdmin";
+    public static final String FLAG = "FLAGAdmin";
     private boolean flag = false;
     private CheckBox chk;
     private SharedPreferences prefs;
@@ -46,6 +46,7 @@ public class SiginAdmin extends AppCompatActivity {
         setup();
         setupSharedPrefs();
         checkPrefs();
+
     }
 
     private void checkPrefs() {
@@ -65,7 +66,7 @@ public class SiginAdmin extends AppCompatActivity {
         editor = prefs.edit();
     }
 
-    public void btnLoginOnClick(View view) {
+    public void btnLoginOnClick12(View view) {
         String name = Email.getText().toString();
         String password = Password.getText().toString();
 
@@ -78,9 +79,9 @@ public class SiginAdmin extends AppCompatActivity {
             }
 
         }
-        // authenticate the user
 
     }
+
 
     public void SingUpAdmin(View view) {
         Intent intent = new Intent(this, SiginUpAdmin.class);
@@ -140,8 +141,7 @@ public class SiginAdmin extends AppCompatActivity {
                         @Override
                         public void onResponse(String response) {
                             responseMessage[0] = response;
-                            getUsername(email);
-                            onPostExecute(response);
+
                         }
                     },
                     new Response.ErrorListener() {
@@ -154,7 +154,11 @@ public class SiginAdmin extends AppCompatActivity {
             requestQueue.add(stringRequest);
 
             while (responseMessage[0] == null) {
-                // Wait for the response
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             return responseMessage[0];
@@ -165,8 +169,7 @@ public class SiginAdmin extends AppCompatActivity {
             Toast.makeText(SiginAdmin.this, response, Toast.LENGTH_SHORT).show();
             if (response.equals("Login successful.")) {
                 intent = new Intent(SiginAdmin.this, AdminPage.class);
-
-                intent.putExtra("username", usernameh);
+                intent.putExtra("username", getusername(mail));
                 startActivity(intent);
             }else {
                 Toast.makeText(SiginAdmin.this, "Login failed", Toast.LENGTH_SHORT).show();
@@ -174,29 +177,61 @@ public class SiginAdmin extends AppCompatActivity {
         }
     }
 
-    public void getUsername(String email) {
-        String url = "http://10.0.2.2:80/android/adminusername.php" + "?email=" + email;
+    private class GetUsernameTask extends AsyncTask<String, Void, String> {
 
-        RequestQueue requestQueue = Volley.newRequestQueue(SiginAdmin.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        usernameh = response.trim();
-                        intent = new Intent(SiginAdmin.this, AdminPage.class);
-                        intent.putExtra("username", usernameh);
-                        startActivity(intent);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(SiginAdmin.this, error.toString(), Toast.LENGTH_SHORT).show();
-                        System.out.println(error.toString());
-                    }
-                });
+        @Override
+        protected String doInBackground(String... params) {
+            String email = params[0];
 
-        requestQueue.add(stringRequest);
+            String url = "http://10.0.2.2:80/android/adminusername.php" + "?email=" + email;
 
+            RequestQueue requestQueue = Volley.newRequestQueue(SiginAdmin.this);
+            final String[] result = new String[1];
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            result[0] = response.trim();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Handle errors
+                            result[0] = error.toString();
+                        }
+                    });
+
+            requestQueue.add(stringRequest);
+
+            // Wait for the response
+            while (result[0] == null) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return result[0];
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            if (response != null && !response.isEmpty()) {
+                usernameh = response;
+                System.out.println("Username: " + usernameh);
+                intent.putExtra("username", usernameh);
+                startActivity(intent);
+            } else {
+                Toast.makeText(SiginAdmin.this, "Failed to get username", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public String getusername(String email) {
+        GetUsernameTask getUsernameTask = new GetUsernameTask();
+        getUsernameTask.execute(email);
+        return usernameh;
     }
 }

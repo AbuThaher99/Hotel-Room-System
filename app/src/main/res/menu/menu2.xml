@@ -29,6 +29,14 @@
 
     </item>
 
+    <item android:id="@+id/greport"
+        android:title="Generate Report"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/Vreports"
+        android:title="View Reports"
+        app:showAsAction="never" />
+
     <item android:id="@+id/logout1"
         android:title="Logout"
         app:showAsAction="never" />

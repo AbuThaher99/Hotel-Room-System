@@ -157,6 +157,9 @@ public class AddFoodActivity extends AppCompatActivity {
 
             case R.id.Delete:
                 Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show();
+                Intent intent7 = new Intent(AddFoodActivity.this, delete.class);
+                intent7.putExtra("username", username);
+                startActivity(intent7);
                 return true;
 
             case R.id.addroom:
@@ -188,6 +191,18 @@ public class AddFoodActivity extends AppCompatActivity {
                 startActivity(intent4);
                 return true;
 
+            case R.id.greport:
+                Toast.makeText(this, "Generate Report", Toast.LENGTH_SHORT).show();
+                Intent intent5 = new Intent(AddFoodActivity.this, Report.class);
+                intent5.putExtra("username", username);
+                startActivity(intent5);
+                return true;
+            case R.id.Vreports:
+                Toast.makeText(this, "View Reports", Toast.LENGTH_SHORT).show();
+                Intent intent6 = new Intent(AddFoodActivity.this, ViewReports.class);
+                intent6.putExtra("username", username);
+                startActivity(intent6);
+
             case R.id.logout1:
                 logout();
                 Toast.makeText(this, "logout", Toast.LENGTH_SHORT).show();
@@ -205,35 +220,44 @@ public class AddFoodActivity extends AppCompatActivity {
 
         return true;
     }
+    private class LogoutTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try {
+                // Make a GET request to the logout URL
+                RequestQueue requestQueue = Volley.newRequestQueue(AddFoodActivity.this);
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, LOGOUT_URL,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Toast.makeText(AddFoodActivity.this, "Logout successful", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(AddFoodActivity.this, SiginAdmin.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finishAffinity();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // Handle errors
+                                Log.e("Logout Error", error.getMessage());
+                            }
+                        });
+
+                // Get the RequestQueue and add the request to it
+                requestQueue.add(stringRequest);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
     private void logout() {
-        // Make a GET request to the logout URL
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, LOGOUT_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        Toast.makeText(AddFoodActivity.this, "Logout successful", Toast.LENGTH_SHORT).show();
-                        // Navigate to the login page
-
-                        Intent intent = new Intent(AddFoodActivity.this, SiginAdmin.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finishAffinity();
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle errors
-                        Toast.makeText(AddFoodActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e("Logout Error", error.getMessage());
-                    }
-                });
-
-        // Get the RequestQueue and add the request to it
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+        LogoutTask logoutTask = new LogoutTask();
+        logoutTask.execute();
     }
 
 

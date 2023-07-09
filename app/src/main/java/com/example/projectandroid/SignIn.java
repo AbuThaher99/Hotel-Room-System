@@ -82,7 +82,6 @@ public class SignIn extends AppCompatActivity {
             }
 
         }
-        // authenticate the user
 
     }
 
