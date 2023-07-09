@@ -115,7 +115,7 @@ public class ViewReports extends AppCompatActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.e("GetReportsTask", error.toString());
+                                Log.e("GetReportsTask", error.toString()+"check");
                             }
                         }) {
                     @Override
@@ -136,15 +136,15 @@ public class ViewReports extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             if (response != null) {
-                // Process the response
+               System.out.println("AbuThaher : "+response);
                 try {
                     JSONArray jsonArray = new JSONArray(response);
                     StringBuilder stringBuilder = new StringBuilder();
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        int totalFood = jsonObject.getInt("totalfood");
-                        int totalRes = jsonObject.getInt("totalres");
+                        double totalFood = jsonObject.getDouble("totalfood");
+                        double totalRes = jsonObject.getDouble("totalres");
                         stringBuilder.append("Report ").append(i + 1).append(": \r\n")
                                 .append("Total Food : ").append(totalFood)
                                 .append("\r\n")
