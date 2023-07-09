@@ -191,6 +191,7 @@ public class ViewFoodReservation extends AppCompatActivity {
                 Intent intent4 = new Intent(ViewFoodReservation.this, ViewReservationPage.class);
                 intent4.putExtra("username", username);
                 startActivity(intent4);
+                return true;
 
             case R.id.greport:
                 Toast.makeText(this, "Generate Report", Toast.LENGTH_SHORT).show();
