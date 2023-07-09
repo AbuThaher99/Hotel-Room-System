@@ -66,6 +66,7 @@ public class ResFoodAdapter extends ArrayAdapter<Resfood> {
 
         if (reservation.getState().equals("Paid")) {
             payButton.setEnabled(false);
+
         } else {
             payButton.setEnabled(true);
         }
@@ -93,7 +94,8 @@ public class ResFoodAdapter extends ArrayAdapter<Resfood> {
         protected String doInBackground(Void... voids) {
             double price = reservation.getPrice();
             insertPriceIntoPayresTable(price);
-            updateReservationState(reservation);
+           // updateReservationState(reservation);
+            deleteReservation(reservation);
 
             // Return a dummy result for demonstration purposes
             return "Reservation paid successfully.";
@@ -102,6 +104,7 @@ public class ResFoodAdapter extends ArrayAdapter<Resfood> {
         @Override
         protected void onPostExecute(String result) {
             Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -134,16 +137,45 @@ public class ResFoodAdapter extends ArrayAdapter<Resfood> {
         requestQueue.add(request);
     }
 
-    private void updateReservationState(Resfood reservation ) {
-        String url = "http://10.0.2.2:80/android/updatestatefood.php";
+//    private void updateReservationState(Resfood reservation ) {
+//        String url = "http://10.0.2.2:80/android/updatestatefood.php";
+//
+//        // Create a request to update the reservation state in the "resroom" table
+//        StringRequest request = new StringRequest(Request.Method.POST, url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        Toast.makeText(getContext(), response, Toast.LENGTH_SHORT).show();
+//
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }) {
+//            @Override
+//            protected Map<String, String> getParams() {
+//                Map<String, String> params = new HashMap<>();
+//                params.put("id", String.valueOf(reservation.getId()));
+//                return params;
+//            }
+//        };
+//
+//        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+//        requestQueue.add(request);
+//    }
 
-        // Create a request to update the reservation state in the "resroom" table
+    private void deleteReservation(Resfood reservation) {
+        String url = "http://10.0.2.2:80/android/delete_reservation.php";
+
+        // Create a request to delete the reservation
         StringRequest request = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(getContext(), response, Toast.LENGTH_SHORT).show();
-
                     }
                 },
                 new Response.ErrorListener() {
@@ -163,8 +195,6 @@ public class ResFoodAdapter extends ArrayAdapter<Resfood> {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(request);
     }
-
-
 
 
 }

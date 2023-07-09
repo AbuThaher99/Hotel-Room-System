@@ -92,8 +92,9 @@ public class ReservationAdapter extends ArrayAdapter<Reservation> {
         protected String doInBackground(Void... voids) {
             double price = reservation.getPrice();
             insertPriceIntoPayresTable(price);
-            updateReservationState(reservation);
+          //  updateReservationState(reservation);
             updateRoomState(reservation.getRoomid());
+            deleteReservation(reservation.getId());
 
             // Return a dummy result for demonstration purposes
             return "Reservation paid successfully.";
@@ -134,35 +135,35 @@ public class ReservationAdapter extends ArrayAdapter<Reservation> {
         requestQueue.add(request);
     }
 
-    private void updateReservationState(Reservation reservation ) {
-        String url = "http://10.0.2.2:80/android/updateres.php";
-
-        // Create a request to update the reservation state in the "resroom" table
-        StringRequest request = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(getContext(), response, Toast.LENGTH_SHORT).show();
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("id", String.valueOf(reservation.getId()));
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(request);
-    }
+//    private void updateReservationState(Reservation reservation ) {
+//        String url = "http://10.0.2.2:80/android/updateres.php";
+//
+//        // Create a request to update the reservation state in the "resroom" table
+//        StringRequest request = new StringRequest(Request.Method.POST, url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        Toast.makeText(getContext(), response, Toast.LENGTH_SHORT).show();
+//
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }) {
+//            @Override
+//            protected Map<String, String> getParams() {
+//                Map<String, String> params = new HashMap<>();
+//                params.put("id", String.valueOf(reservation.getId()));
+//                return params;
+//            }
+//        };
+//
+//        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+//        requestQueue.add(request);
+//    }
 
     private void updateRoomState(int roomId ) {
         String url = "http://10.0.2.2:80/android/updateAval2.php";
@@ -185,6 +186,35 @@ public class ReservationAdapter extends ArrayAdapter<Reservation> {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("id", String.valueOf(roomId));
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(request);
+    }
+
+    private void deleteReservation(int reservation) {
+        String url = "http://10.0.2.2:80/android/delete_rese.php";
+
+        // Create a request to delete the reservation
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(getContext(), response, Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("id", String.valueOf(reservation));
                 return params;
             }
         };
