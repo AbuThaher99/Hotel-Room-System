@@ -170,7 +170,6 @@ public class ViewFoodReservation extends AppCompatActivity {
                 Intent intent = new Intent(ViewFoodReservation.this, AddRomPage.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
-
                 return true;
 
             case R.id.addfood:
@@ -216,7 +215,6 @@ public class ViewFoodReservation extends AppCompatActivity {
         }
 
     }
-
 
     private class LogoutTask extends AsyncTask<Void, Void, String> {
         @Override
