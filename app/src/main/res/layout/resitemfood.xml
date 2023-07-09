@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:layout_gravity="center_vertical"
+    android:layout_centerVertical="true">
+
+    <TextView
+        android:id="@+id/resusername"
+        android:layout_width="wrap_content"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="165dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/resfoodname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/resusername"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="165dp"
+        android:text="TextView" />
+    <TextView
+        android:id="@+id/resfooddes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:layout_below="@id/resfoodname"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="165dp"
+        android:text="TextView " />
+
+    <TextView
+        android:id="@+id/resfoodprice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:layout_below="@id/resfooddes"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="165dp"
+        android:text="TextView 4" />
+    <TextView
+        android:id="@+id/resstate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/resfoodprice"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="165dp"
+        android:text="TextView 4" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/payres"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pay"
+        android:layout_below="@id/resstate"
+        android:background="@drawable/buttin"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="165dp"/>
+</RelativeLayout>

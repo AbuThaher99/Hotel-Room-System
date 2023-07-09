@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="ExtraText">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<item android:id="@+id/home"
+    android:icon="@drawable/home"
+    android:title="Home"
+    app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/search"
+    android:title="Search"
+    app:showAsAction="never" />
+
+    <item android:id="@+id/Vroom"
+        android:title="View Room"
+        app:showAsAction="never" />
+    <item android:id="@+id/Vfood"
+        android:title="Food Items"
+        app:showAsAction="never" />
+
+
+
+    <item android:id="@+id/logout"
+        android:title="Logout"
+        app:showAsAction="never" />
+
+
+</menu>
